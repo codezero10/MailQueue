@@ -176,7 +176,7 @@ public class ConnectDB implements Runnable{
     System.out.println("fails:"+fail_count);// no. of fails
  }catch(SQLException se){
 	 
-	 if (se.getErrorCode()==1213 )//code for deadlock error ER_LOCK_DEADLOCK
+	 if ((se.getErrorCode()==1213))//code for deadlock error ER_LOCK_DEADLOCK: 1213
 	 {System.out.println("Deadlock:restart!");
 	 //Restart measures
 	 try{
