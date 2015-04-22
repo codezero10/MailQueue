@@ -105,7 +105,7 @@ public class ConnectDB implements Runnable{
 
     conn.setAutoCommit(true);//set auto commit
     String sql;
-    sql = "SELECT * FROM EmailQueue where time_stamp=? and process_flg='N'  and process_id=? limit 500 for update";
+    sql = "SELECT * FROM EmailQueue where time_stamp=? and process_flg='N'  and process_id=? limit 500";
     //only records with "N" i.e. not processed but with updated process id by the process
     prepared =conn.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);
     // cursor only can move forward. update enabled
@@ -128,11 +128,12 @@ public class ConnectDB implements Runnable{
     
     
     while(rs.next()){
+    	int id=rs.getInt("id");
     	String from=rs.getString("from_email_address");
     	String to=rs.getString("to_email_address");
     	String subject=rs.getString("subject_line");
     	String body=rs.getString("body");
-    	rs.updateString("process_flg", "Y");
+    	//rs.updateString("process_flg", "Y");
     	
     	
     	
@@ -146,7 +147,11 @@ public class ConnectDB implements Runnable{
     	if(isConnected){//if connected
     	boolean success=mail.sendMail(from,to,subject,body);// call the mail sender and get status 
     	if (success){
-    		rs.updateRow(); //if success then only update
+    		Statement stmt=null;
+    		String sql2="update EmailQueue set process_flg='Y' where id="+id;
+    		stmt=conn.createStatement();
+    		stmt.executeUpdate(sql2);
+    		//rs.updateRow(); //if success then only update
     	}
     	else{
     		fail_count++;//failed msg count
