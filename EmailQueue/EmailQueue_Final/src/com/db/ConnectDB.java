@@ -148,9 +148,13 @@ public class ConnectDB implements Runnable{
     	boolean success=mail.sendMail(from,to,subject,body);// call the mail sender and get status 
     	if (success){
     		Statement stmt=null;
+    		conn.setAutoCommit(false);// start transaction
+    		//conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); //serialize the transaction
     		String sql2="update EmailQueue set process_flg='Y' where id="+id;
     		stmt=conn.createStatement();
     		stmt.executeUpdate(sql2);
+    		conn.commit();// complete transaction
+    		conn.setAutoCommit(true);
     		//rs.updateRow(); //if success then only update
     	}
     	else{
@@ -175,7 +179,8 @@ public class ConnectDB implements Runnable{
     conn.close();
     System.out.println("fails:"+fail_count);// no. of fails
  }catch(SQLException se){
-	 
+	 // NOT NEEDED anymore. using transaction
+	 //.......................
 	 if ((se.getErrorCode()==1213))//code for deadlock error ER_LOCK_DEADLOCK: 1213
 	 {System.out.println("Deadlock:restart!");
 	 //Restart measures
@@ -223,6 +228,7 @@ public class ConnectDB implements Runnable{
 	 }
 	 else{
     se.printStackTrace();}
+	 //.....................
  }catch(Exception e){
 	 e.printStackTrace();
  }
