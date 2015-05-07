@@ -2,8 +2,7 @@ package com.db;
 
 //connect the DB
 //get mails and call send mail
-//restart if faced with deadlock---can be omitted if we have a monitor program in place that calls this program
-//Or if manual restart is decided
+
 
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
