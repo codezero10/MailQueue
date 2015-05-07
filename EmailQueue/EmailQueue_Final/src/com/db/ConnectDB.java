@@ -8,13 +8,6 @@ import java.sql.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-
-
-
-
-
-
 import com.mail.*;//for send mail
 //import com.main.*;//for restart call to main function of Combine after deadlock error
 
